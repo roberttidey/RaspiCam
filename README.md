@@ -25,23 +25,32 @@ There are 3 python files, RaspiCam.py and two support libraries which should all
 The program can be run manually by python RaspiCam.py when in that folder but it is more convenient
 to make it start automatically at boot time. To do this use the RaspiCam file in the boot folder.
 Copy it into home and then from there issue the following commands
+
 sudo cp RaspiCam /etc/init.d/RaspiCam
+
 sudo chmod 755 /etc/init.d/RaspiCam
+
 sudo update-rc.d RaspiCam defaults
 
 It will then start at boot or can be manually started and stopped by
+
 sudo /etc/init.d/RaspiCam start
+
 sudo /etc/init.d/RaspiCam stop
 
 To remove it from the boot then
+
 sudo update-rc.d -f RaspiCam remove
 
 The motion detection then needs to be altered so that it is directed through RaspiCam.py
 To do this edit /etc/motion/motion.conf and change the two event lines
+
 on_event_start echo -n '1' >/home/pi/python/FIFO
+
 on_event_end echo -n '0' >/home/pi/python/FIFO
 
 RUNNING
+
 When RaspiCam.py is running it is monitoring the capture commands from motion and also the
 period of the day it is in. This is split into 4 periods Night, Dawn,Day and Dusk.
 
@@ -65,8 +74,11 @@ from Sunset, and if Dawn is 3600 then it will be 1 hour before Sunrise.
 Three Command arrays then determine what is sent to RaspiMJPEG
 COMMANDS_PERIODS determines the commands sent during the transition to the 4 daily periods
 Night, Dawn, Day, Dusk
+
 COMMANS_ON determines the capture command sent for a motion trigger during each of the daily periods
+
 COMMANDS_OFF determines what capture off command is sent determined by the last COMMAND_ON used.
+
 Note that if there is a transition between say day and dusk whilst capture is active then the COMMAND_OFF
 still corresponds to the start command used to begin the capture.
 
