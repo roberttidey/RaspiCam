@@ -19,6 +19,7 @@ This is based upon the latitude and longtitude of the site and the time of year.
 This means it will adjust automatically as daylight changes.
 
 INSTALL
+
 There are 3 python files, RaspiCam.py and two support libraries which should all be placed in
 /home/pi/python
 
@@ -65,6 +66,7 @@ FIFO
 It also logs its activity to RaspiCamLog in the python folder.
 
 CONFIG
+
 This is done just by editing the RaspiCam.py file. If it is running then it will need to be stopped
 and started to take effect. See Install.
 LATITUDE, LONGTITUDE need to be set for the location + is N and E, - is S and W
@@ -75,9 +77,9 @@ Three Command arrays then determine what is sent to RaspiMJPEG
 COMMANDS_PERIODS determines the commands sent during the transition to the 4 daily periods
 Night, Dawn, Day, Dusk
 
-COMMANS_ON determines the capture command sent for a motion trigger during each of the daily periods
+COMMANDS_ON determines the capture command sent for a motion trigger during each of the daily periods
 
-COMMANDS_OFF determines what capture off command is sent determined by the last COMMAND_ON used.
+COMMANDS_OFF determines what capture off command is sent determined by the last COMMANDS_ON used.
 
 Note that if there is a transition between say day and dusk whilst capture is active then the COMMAND_OFF
 still corresponds to the start command used to begin the capture.
