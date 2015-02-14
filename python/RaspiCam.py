@@ -125,7 +125,7 @@ while True:
    if cmd == "0":
       if lastOnCommand >= 0:
          logging.info("Stop capture requested")
-         if not COMMANDS_OFF[lastOnCommand]:
+         if COMMANDS_OFF[lastOnCommand]:
             sendCmds(COMMANDS_OFF[lastOnCommand])
             lastOnCommand = -1
       else:
@@ -134,7 +134,7 @@ while True:
    elif cmd == "1":
       if lastOnCommand < 0:
          logging.info("Start capture requested")
-         if not COMMANDS_ON[lastDayPeriod]:
+         if COMMANDS_ON[lastDayPeriod]:
             sendCmds(COMMANDS_ON[lastDayPeriod])
             lastOnCommand = lastDayPeriod
       else:
