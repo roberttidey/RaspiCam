@@ -111,3 +111,9 @@ The new preview.php associates these with the corresponding recording.
 
 Changes 14th Feb 2015
 Added web tweaks files to give a tabular view of recorded material.
+
+Changes 15th Feb 2015
+More web tweaks. Thumbnails are now generated for manually recorded images
+and videos using ffmpeg. This avoids downloading and resizing images in the
+browser. It can give a delay when going into the list if new material needs
+to be thumbnailed, but after that it is faster.
