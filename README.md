@@ -118,7 +118,12 @@ and videos using ffmpeg. This avoids downloading and resizing images in the
 browser. It can give a delay when going into the list if new material needs
 to be thumbnailed, but after that it is faster.
 
-Changes 15th Feb 2015
+Changes 16th Feb 2015
 More web tweaks. Added select checkboxes and Select all, Select None and Delete selected
 Each row has an explicit preview and delete button. Feedback to the form actions changed
 from GET to POST.
+
+Changes 17th Feb 2015
+More web tweaks. Moved download functionality from download.php into preview.php
+download.php is no longer used
+Added a Get zip button which downloads a zip of all selected files.

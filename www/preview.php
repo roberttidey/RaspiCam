@@ -61,6 +61,15 @@
             if ($tFile != "") {
                unlink("media/$tFile");
             }
+         } else if ($_POST['download1']) {
+            $dFile = $_POST['download1'];
+            if(substr($dFile, -3) == "jpg") {
+               header("Content-Type: image/jpeg");
+            } else {
+               header("Content-Type: video/mp4");
+            }
+            header("Content-Disposition: attachment; filename=\"" . $dFile . "\"");
+            readfile("media/$dFile");
          } else if ($_POST['preview']) {
             $pFile = $_POST['preview'];
          } else {
@@ -86,6 +95,23 @@
                      }
                   }        
                   break;
+               case 'zipSel':
+                  if(!empty($_POST['check_list'])) {
+                     $zipname = 'media/cam_' . date("Ymd_His") . '.zip';
+                     $zip = new ZipArchive;
+                     $zip->open($zipname, ZipArchive::CREATE);
+                     foreach($_POST['check_list'] as $check) {
+                        $zip->addFile("media/$check");
+                     }
+                     $zip->close();
+                     header("Content-Type: application/zip");
+                     header("Content-Disposition: attachment; filename=\"" . $zipname . "\"");
+                     readfile("$zipname");
+                     if(file_exists($zipname)){
+                         unlink($zipname);
+                     }                  
+                  }        
+                  break;
             }
          }
       ?>
@@ -98,8 +124,8 @@
             } else {
                echo "<video width='640' controls><source src='media/$pFile' type='video/mp4'>Your browser does not support the video tag.</video>";
             }
-            echo "<p><br><input class='btn btn-primary' type='button' value='Download' onclick='window.open(\"download.php?file=$pFile\", \"_blank\");'>";
-            echo "<button class='btn btn-danger' type='submit' name='delete1' value='$pFile'>Delete</button></p>";
+            echo "<p><br><button class='btn btn-danger' type='submit' name='download1' value='$pFile'>Download</button>";
+            echo "&nbsp;<button class='btn btn-primary' type='submit' name='delete1' value='$pFile'>Delete</button></p>";
          }
          echo "<h1>Files</h1>";
          $files = scandir("media");
@@ -138,6 +164,7 @@
             echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectAll'>Select All</button>";
             echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectNone'>Select None</button>";
             echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteSel'>Delete Sel</button>";
+            echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='zipSel'>Get Zip</button>";
          }
       ?>
       </form>
