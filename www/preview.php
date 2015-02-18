@@ -2,6 +2,21 @@
 <?php
    define('BASE_DIR', dirname(__FILE__));
    require_once(BASE_DIR.'/config.php');
+  
+   //Text labels here
+   define('BTN_DOWNLOAD', 'Download');
+   define('BTN_DELETE', 'Delete');
+   define('BTN_DELETEALL', 'Delete All');
+   define('BTN_DELETESEL', 'Delete Sel');
+   define('BTN_SELECTALL', 'Select All');
+   define('BTN_SELECTNONE', 'Select None');
+   define('BTN_GETZIP', 'Get Zip');
+   define('BTN_UPDATESIZES', 'Update Sizes');
+   define('TXT_PREVIEW', 'Preview');
+   define('TXT_THUMB', 'Thumb');
+   define('TXT_FILES', 'Files');
+   
+   //Set size defaults and try to get from cookies
    $previewSize = 640;
    $thumbSize = 96;
    if(isset($_COOKIE["previewSize"])) {
@@ -10,7 +25,7 @@
    if(isset($_COOKIE["thumbSize"])) {
       $thumbSize = $_COOKIE["thumbSize"];
    }
-   //Search for matching thumb files within 4 seconds back
+   //function to earch for matching thumb files, within 4 seconds back for motion triggered videos
    function getThumb($vFile, $makeit) {
       $fType = substr($vFile,0,5);
       $fDate = substr($vFile,11,8);
@@ -44,6 +59,8 @@
    }
    $dSelect = "";
    $pFile = "";
+   
+   // 1 file based commands
    if ($_POST['delete1']) {
       unlink("media/" . $_POST['delete1']);
       $tFile = getThumb($_POST['delete1'], false);
@@ -62,6 +79,7 @@
    } else if ($_POST['preview']) {
       $pFile = $_POST['preview'];
    } else {
+      //global commands
       switch($_POST['action']) {
          case 'deleteAll':
             $files = scandir("media");
@@ -136,9 +154,9 @@
       <form action="<?php $_PHP_SELF ?>" method="POST">
       <?php
          if ($pFile != "") {
-            echo "<h1>Preview:  " . substr($pFile,0,10);
-            echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='download1' value='$pFile'>Download</button>";
-            echo "&nbsp;<button class='btn btn-primary' type='submit' name='delete1' value='$pFile'>Delete</button></p>";
+            echo "<h1>" . TXT_PREVIEW . ":  " . substr($pFile,0,10);
+            echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='download1' value='$pFile'>" . BTN_DOWNLOAD . "</button>";
+            echo "&nbsp;<button class='btn btn-primary' type='submit' name='delete1' value='$pFile'>" . BTN_DELETE . "</button></p>";
             echo "</h1>";
             if(substr($pFile, -3) == "jpg") {
                echo "<a href='media/$tFile' target='_blank'><img src='media/$pFile' width='" . $previewSize . "px'></a>";
@@ -146,12 +164,12 @@
                echo "<video width='" . $previewSize . "px' controls><source src='media/$pFile' type='video/mp4'>Your browser does not support the video tag.</video>";
             }
          }
-         echo "<h1>Files&nbsp;&nbsp;";
-         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteAll'>Delete All</button>";
-         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectAll'>Select All</button>";
-         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectNone'>Select None</button>";
-         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteSel'>Delete Sel</button>";
-         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='zipSel'>Get Zip</button>";
+         echo "<h1>" . TXT_FILES . "&nbsp;&nbsp;";
+         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteAll'>" . BTN_DELETEALL . "</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectAll'>" . BTN_SELECTALL . "</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectNone'>" . BTN_SELECTNONE . "</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteSel'>" . BTN_DELETESEL . "</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='zipSel'>" . BTN_GETZIP . "</button>";
          echo "</h1>";
          $files = scandir("media");
          if(count($files) == 2) echo "<p>No videos/images saved</p>";
@@ -186,9 +204,9 @@
             }
             echo "</table>";
          }
-         echo "<p>Preview <input type='text' size='4' name='previewSize' value='$previewSize'>";
-         echo "&nbsp;&nbsp;Thumb <input type='text' size='3' name='thumbSize' value='$thumbSize'>";
-         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='updateSizes'>Update Sizes</button>";
+         echo "<p>" . TXT_PREVIEW . " <input type='text' size='4' name='previewSize' value='$previewSize'>";
+         echo "&nbsp;&nbsp;" . TXT_THUMB . " <input type='text' size='3' name='thumbSize' value='$thumbSize'>";
+         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='updateSizes'>" . BTN_UPDATESIZES . "</button>";
       ?>
       </form>
       </div>

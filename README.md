@@ -131,4 +131,5 @@ Added a Get zip button which downloads a zip of all selected files.
 Changes 18th Feb 2015
 More web tweaks. Allow preview and thumbnail sizes to be set on a browser
 basis (cookies). Moved buttons around so less space taken up and no scroll
-needed to get to major functions.
+needed to get to major functions. Text for labels etc. moved to constants
+at top to make it easier to change.
