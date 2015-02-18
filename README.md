@@ -86,28 +86,6 @@ still corresponds to the start command used to begin the capture.
 
 The RaspiMJPEG-Commands.txt lists the possible commands that can be sent.
 
-WEB TWEAKS
-This is independent of the Python helper. Either can be used separately or both together.
-The www folder contains an updated preview.php to replace the existing one in /var/www
-together with a couple of icon files.
-
-This changes the look of the file list you get when
-pushing the Download files. Instead of a list of the filenames. This is parsed into a table
-making it a little clearer and allowing more rapid delete of individual files.
-Images recorded are displayed as thumbnails.
-
-Videos recorded after motion detection can also have a thumbnail of their first capture frame.
-To do this requires a couple of config lines in motion.conf to be edited.
-
-output_normal first
-
-target_dir /var/www/media
-
-jpeg_filename vthumb_%Y%m%d_%H%M%S
-
-These allow motion to put a thumbnail into the media folder when triggered.
-The new preview.php associates these with the corresponding recording.
-
 
 Changes 18th Feb 2015
 Web tweaks for preview that were here have been moved my forked version of the repository
