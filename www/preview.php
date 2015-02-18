@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <?php
-  define('BASE_DIR', dirname(__FILE__));
-  require_once(BASE_DIR.'/config.php');
-  
-  //Search for matching thumb files within 4 seconds back
+   define('BASE_DIR', dirname(__FILE__));
+   require_once(BASE_DIR.'/config.php');
+   $previewSize = 640;
+   $thumbSize = 96;
+   if(isset($_COOKIE["previewSize"])) {
+      $previewSize = $_COOKIE["previewSize"];
+   }
+   if(isset($_COOKIE["thumbSize"])) {
+      $thumbSize = $_COOKIE["thumbSize"];
+   }
+   //Search for matching thumb files within 4 seconds back
    function getThumb($vFile, $makeit) {
       $fType = substr($vFile,0,5);
       $fDate = substr($vFile,11,8);
@@ -35,7 +42,81 @@
       }
       return "";
    }
+   $dSelect = "";
+   $pFile = "";
+   if ($_POST['delete1']) {
+      unlink("media/" . $_POST['delete1']);
+      $tFile = getThumb($_POST['delete1'], false);
+      if ($tFile != "") {
+         unlink("media/$tFile");
+      }
+   } else if ($_POST['download1']) {
+      $dFile = $_POST['download1'];
+      if(substr($dFile, -3) == "jpg") {
+         header("Content-Type: image/jpeg");
+      } else {
+         header("Content-Type: video/mp4");
+      }
+      header("Content-Disposition: attachment; filename=\"" . $dFile . "\"");
+      readfile("media/$dFile");
+   } else if ($_POST['preview']) {
+      $pFile = $_POST['preview'];
+   } else {
+      switch($_POST['action']) {
+         case 'deleteAll':
+            $files = scandir("media");
+            foreach($files as $file) unlink("media/$file");
+            break;
+         case 'selectAll':
+            $dSelect = "checked";
+            break;
+         case 'selectNone':
+            $dSelect = "";
+            break;
+         case 'deleteSel':
+            if(!empty($_POST['check_list'])) {
+               foreach($_POST['check_list'] as $check) {
+                  unlink("media/$check");
+                  $tFile = getThumb($check, false);
+                  if ($tFile != "") {
+                     unlink("media/$tFile");
+                  }
+               }
+            }        
+            break;
+         case 'zipSel':
+            if(!empty($_POST['check_list'])) {
+               $zipname = 'media/cam_' . date("Ymd_His") . '.zip';
+               $zip = new ZipArchive;
+               $zip->open($zipname, ZipArchive::CREATE);
+               foreach($_POST['check_list'] as $check) {
+                  $zip->addFile("media/$check");
+               }
+               $zip->close();
+               header("Content-Type: application/zip");
+               header("Content-Disposition: attachment; filename=\"" . $zipname . "\"");
+               readfile("$zipname");
+               if(file_exists($zipname)){
+                   unlink($zipname);
+               }                  
+            }        
+            break;
+         case 'updateSizes':
+            if(!empty($_POST['previewSize'])) {
+               $previewSize = $_POST['previewSize'];
+               if ($previewSize < 100 || $previewSize > 1920) $previewSize = 640;
+               setcookie("previewSize", $previewSize, time() + (86400 * 365), "/");
+            }        
+            if(!empty($_POST['thumbSize'])) {
+               $thumbSize = $_POST['thumbSize'];
+               if ($thumbSize < 32 || $thumbSize > 320) $thumbSize = 96;
+               setcookie("thumbSize", $thumbSize, time() + (86400 * 365), "/");
+            }        
+            break;
+      }
+   }
 ?>
+
 <html>
    <head>
       <meta name="viewport" content="width=550, initial-scale=1">
@@ -52,82 +133,26 @@
       </div>
     
       <div class="container-fluid">
-      <?php
-         $dSelect = "";
-         $pFile = "";
-         if ($_POST['delete1']) {
-            unlink("media/" . $_POST['delete1']);
-            $tFile = getThumb($_POST['delete1'], false);
-            if ($tFile != "") {
-               unlink("media/$tFile");
-            }
-         } else if ($_POST['download1']) {
-            $dFile = $_POST['download1'];
-            if(substr($dFile, -3) == "jpg") {
-               header("Content-Type: image/jpeg");
-            } else {
-               header("Content-Type: video/mp4");
-            }
-            header("Content-Disposition: attachment; filename=\"" . $dFile . "\"");
-            readfile("media/$dFile");
-         } else if ($_POST['preview']) {
-            $pFile = $_POST['preview'];
-         } else {
-            switch($_POST['action']) {
-               case 'deleteAll':
-                  $files = scandir("media");
-                  foreach($files as $file) unlink("media/$file");
-                  break;
-               case 'selectAll':
-                  $dSelect = "checked";
-                  break;
-               case 'selectNone':
-                  $dSelect = "";
-                  break;
-               case 'deleteSel':
-                  if(!empty($_POST['check_list'])) {
-                     foreach($_POST['check_list'] as $check) {
-                        unlink("media/$check");
-                        $tFile = getThumb($check, false);
-                        if ($tFile != "") {
-                           unlink("media/$tFile");
-                        }
-                     }
-                  }        
-                  break;
-               case 'zipSel':
-                  if(!empty($_POST['check_list'])) {
-                     $zipname = 'media/cam_' . date("Ymd_His") . '.zip';
-                     $zip = new ZipArchive;
-                     $zip->open($zipname, ZipArchive::CREATE);
-                     foreach($_POST['check_list'] as $check) {
-                        $zip->addFile("media/$check");
-                     }
-                     $zip->close();
-                     header("Content-Type: application/zip");
-                     header("Content-Disposition: attachment; filename=\"" . $zipname . "\"");
-                     readfile("$zipname");
-                     if(file_exists($zipname)){
-                         unlink($zipname);
-                     }                  
-                  }        
-                  break;
-            }
-         }
-      ?>
       <form action="<?php $_PHP_SELF ?>" method="POST">
       <?php
          if ($pFile != "") {
-            echo "<h1>Preview:  " . substr($pFile,0,10) . "</h1>";
-            if(substr($pFile, -3) == "jpg") {
-               echo "<a href='media/$tFile' target='_blank'><img src='media/$pFile' width='640'></a>";
-            } else {
-               echo "<video width='640' controls><source src='media/$pFile' type='video/mp4'>Your browser does not support the video tag.</video>";
-            }
-            echo "<p><br><button class='btn btn-danger' type='submit' name='download1' value='$pFile'>Download</button>";
+            echo "<h1>Preview:  " . substr($pFile,0,10);
+            echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='download1' value='$pFile'>Download</button>";
             echo "&nbsp;<button class='btn btn-primary' type='submit' name='delete1' value='$pFile'>Delete</button></p>";
+            echo "</h1>";
+            if(substr($pFile, -3) == "jpg") {
+               echo "<a href='media/$tFile' target='_blank'><img src='media/$pFile' width='" . $previewSize . "px'></a>";
+            } else {
+               echo "<video width='" . $previewSize . "px' controls><source src='media/$pFile' type='video/mp4'>Your browser does not support the video tag.</video>";
+            }
          }
-         echo "<h1>Files</h1>";
+         echo "<h1>Files&nbsp;&nbsp;";
+         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteAll'>Delete All</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectAll'>Select All</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectNone'>Select None</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteSel'>Delete Sel</button>";
+         echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='zipSel'>Get Zip</button>";
+         echo "</h1>";
          $files = scandir("media");
          if(count($files) == 2) echo "<p>No videos/images saved</p>";
          else {
@@ -147,7 +172,7 @@
                   echo "<td><img src='" . $fType . ".png'/></td>";
                   $tFile = getThumb($file, true);
                   if($tFile != "") {
-                     echo "<td><img src='media/$tFile' style='width:64px'/></td>";
+                     echo "<td><img src='media/$tFile' style='width:" . $thumbSize . "px'/></td>";
                   }
                   else { 
                      echo "<td>None</td>";
@@ -160,12 +185,10 @@
                } 
             }
             echo "</table>";
-            echo "<p><button class='btn btn-danger' type='submit' name='action' value='deleteAll'>Delete All</button>";
-            echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectAll'>Select All</button>";
-            echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='selectNone'>Select None</button>";
-            echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='deleteSel'>Delete Sel</button>";
-            echo "&nbsp;&nbsp;<button class='btn btn-danger' type='submit' name='action' value='zipSel'>Get Zip</button>";
          }
+         echo "<p>Preview <input type='text' size='4' name='previewSize' value='$previewSize'>";
+         echo "&nbsp;&nbsp;Thumb <input type='text' size='3' name='thumbSize' value='$thumbSize'>";
+         echo "&nbsp;&nbsp;<button class='btn btn-primary' type='submit' name='action' value='updateSizes'>Update Sizes</button>";
       ?>
       </form>
       </div>
