@@ -109,27 +109,8 @@ These allow motion to put a thumbnail into the media folder when triggered.
 The new preview.php associates these with the corresponding recording.
 
 
-Changes 14th Feb 2015
-Added web tweaks files to give a tabular view of recorded material.
-
-Changes 15th Feb 2015
-More web tweaks. Thumbnails are now generated for manually recorded images
-and videos using ffmpeg. This avoids downloading and resizing images in the
-browser. It can give a delay when going into the list if new material needs
-to be thumbnailed, but after that it is faster.
-
-Changes 16th Feb 2015
-More web tweaks. Added select checkboxes and Select all, Select None and Delete selected
-Each row has an explicit preview and delete button. Feedback to the form actions changed
-from GET to POST.
-
-Changes 17th Feb 2015
-More web tweaks. Moved download functionality from download.php into preview.php
-download.php is no longer used
-Added a Get zip button which downloads a zip of all selected files.
-
 Changes 18th Feb 2015
-More web tweaks. Allow preview and thumbnail sizes to be set on a browser
-basis (cookies). Moved buttons around so less space taken up and no scroll
-needed to get to major functions. Text for labels etc. moved to constants
-at top to make it easier to change.
+Web tweaks for preview that were here have been moved my forked version of the repository
+
+RPi_Cam_Web_Interface
+
