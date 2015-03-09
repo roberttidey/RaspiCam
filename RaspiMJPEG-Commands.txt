@@ -1,17 +1,13 @@
 Possible Pipe-Commands:
-ca 1 start video capture
-ca 0 stop video capture
-im capture image
-tl start timelapse, parameter is time between images in 1/10 seconds.
-tl 0 stop timelapse
+an text set annotation
+ab 0/1 annotation background
 px set video+img resolution/framerate (AAAA BBBB CC DD EEEE FFFF; video = AxB px, C fps, boxed with D fps, image = ExF px)
 sh set sharpness (range: [-100;100]; default: 0)
 co set contrast (range: [-100;100]; default: 0)
 br set brightness (range: [0;100]; default: 50)
 sa set saturation (range: [-100;100]; default: 0)
 is set ISO (range: [100;800]; default: 0=auto)
-vs 1 turn on video stabilisation
-vs 0 turn off video stabilisation
+vs 0/1 turn off/on video stabilisation
 ec set exposure compensation (range: [-10;10]; default: 0)
 em set exposure mode (range: [off/auto/night/nightpreview/backlight/spotlight/sports/snow/beach/verylong/fixedfps/antishake/fireworks]; default: auto) 
 wb set white balance (range: [off/auto/sun/cloudy/shade/tungsten/fluorescent/incandescent/flash/horizon]; default: auto) 
@@ -24,9 +20,10 @@ fl set flip (range: [0;3]; default: 0)
 ri set sensor region (AAAAA BBBBB CCCCC DDDDD, x=A, y=B, w=C, h=D)
 qu set output image quality (range: [0;100]; default: 85)
 bi set output video bitrate (range: [0;25000000]; default: 17000000)
-rl 0 disables raw layer
-rl 1 enables raw layer
-ru 0 halt RaspiMJPEG and release camera
-ru 1 restart mjpeg-stream
-md 1 start motion detection
-md 0 stop motion detection
+rl 0/1 disable / enable raw layer
+ru 0/1 halt/restart RaspiMJPEG and release camera
+md 0/1 stop/start motion detection
+ca 0/1 stop/start video capture
+im capture image
+tl 0/p start timelapse, parameter is time between images in 1/10 seconds.0 is stop
+tl 0 stop timelapse
