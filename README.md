@@ -1,7 +1,6 @@
-This project has been superceded by my fork of Silvan Melchior's RPi_Cam_Web_Interface
-
-The same functionality as described here is now built into a scheduling facility integrated
-with the RPi cam web site.
+This project has been superceded by changes in the RPi_Cam_Web_Interface.
+These were originally in my fork of silvanmelchior repo.
+They have now been merged back in so please use https://github.com/silvanmelchior/RPi_Cam_Web_Interface
 
 Python helper for Raspberry RPI Cam control + Web tweaks
 
